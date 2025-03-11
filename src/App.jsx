@@ -16,7 +16,7 @@ function reducer(state, action) {
     case "openAcc":
       if (state.isValid) {
         alert("You already have an account!");
-        return;
+        return state;
       }
       return {
         ...state,
@@ -39,12 +39,25 @@ function reducer(state, action) {
             : state.balance,
       };
     case "requestLoan":
+      if (state.loan > 0) {
+        alert(
+          "You already have an active loan, Pay off before requesting another!"
+        );
+        return state;
+      }
       return {
         ...state,
         balance: state.balance + LOAN_5000,
         loan: LOAN_5000,
       };
     case "payLoan":
+      if (state.loan && state.balance < LOAN_5000) {
+        alert(
+          "Your balance isn't up to the loan, fund your account and pay up before due date"
+        );
+        return state;
+      }else if(state.)
+
       return {
         ...state,
         balance:
@@ -60,10 +73,10 @@ function reducer(state, action) {
         };
       } else {
         alert("Account cannot be closed until balance and loan are settled.");
-        return state; // Return the current state unchanged
+        return state;
       }
     default: {
-      return state;
+      return "This action is unknown!";
     }
   }
 }
