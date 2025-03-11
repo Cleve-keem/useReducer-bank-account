@@ -14,6 +14,10 @@ const LOAN_5000 = 5000;
 function reducer(state, action) {
   switch (action.type) {
     case "openAcc":
+      if (state.isValid) {
+        alert("You already have an account!");
+        return;
+      }
       return {
         ...state,
         balance: 500,
@@ -40,6 +44,24 @@ function reducer(state, action) {
         balance: state.balance + LOAN_5000,
         loan: LOAN_5000,
       };
+    case "payLoan":
+      return {
+        ...state,
+        balance:
+          state.balance >= LOAN_5000
+            ? state.balance - LOAN_5000
+            : state.balance,
+        loan: 0,
+      };
+    case "closeAcc":
+      if (state.balance === 0 && state.loan === 0) {
+        return {
+          ...initialState,
+        };
+      } else {
+        alert("Account cannot be closed until balance and loan are settled.");
+        return state; // Return the current state unchanged
+      }
     default: {
       return state;
     }
@@ -48,7 +70,6 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-
   const { balance, loan, isValid } = state;
   const isDisable = !isValid;
 
@@ -65,13 +86,13 @@ function App() {
           onClick={() => dispatch({ type: "deposit" })}
           disabled={isDisable}
         >
-          Deposit
+          Deposit 150
         </button>
         <button
           onClick={() => dispatch({ type: "withdraw" })}
           disabled={isDisable}
         >
-          Withdraw
+          Withdraw 50
         </button>
         <button
           onClick={() => dispatch({ type: "requestLoan" })}
@@ -79,8 +100,18 @@ function App() {
         >
           Request a loan of 5000
         </button>
-        <button disabled={isDisable}>Pay loan</button>
-        <button disabled={isDisable}>Close Account</button>
+        <button
+          onClick={() => dispatch({ type: "payLoan" })}
+          disabled={isDisable}
+        >
+          Pay loan
+        </button>
+        <button
+          onClick={() => dispatch({ type: "closeAcc" })}
+          disabled={isDisable}
+        >
+          Close Account
+        </button>
       </div>
     </div>
   );
