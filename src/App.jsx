@@ -51,12 +51,18 @@ function reducer(state, action) {
         loan: LOAN_5000,
       };
     case "payLoan":
-      if (state.loan && state.balance < LOAN_5000) {
+      if (state.loan !== 0 && state.balance < LOAN_5000) {
         alert(
           "Your balance isn't up to the loan, fund your account and pay up before due date"
         );
         return state;
-      }else if(state.)
+      } else if (state.loan === 0) {
+        alert(
+          "You don't have a pending loan!, You are eligible to apply for a loan"
+        );
+
+        return state;
+      }
 
       return {
         ...state,
